@@ -1,7 +1,7 @@
 //
 //  SwipeView.h
 //
-//  Version 1.3.2
+//  Version 1.3 beta 6
 //
 //  Created by Nick Lockwood on 03/09/2010.
 //  Copyright 2010 Charcoal Design
@@ -31,11 +31,6 @@
 //
 
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wauto-import"
-#pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
-
-
 #import <Availability.h>
 #undef weak_delegate
 #if __has_feature(objc_arc) && __has_feature(objc_arc_weak)
@@ -48,11 +43,12 @@
 #import <UIKit/UIKit.h>
 
 
-typedef NS_ENUM(NSUInteger, SwipeViewAlignment)
+typedef enum
 {
     SwipeViewAlignmentEdge = 0,
     SwipeViewAlignmentCenter
-};
+}
+SwipeViewAlignment;
 
 
 @protocol SwipeViewDataSource, SwipeViewDelegate;
@@ -61,6 +57,7 @@ typedef NS_ENUM(NSUInteger, SwipeViewAlignment)
 
 @property (nonatomic, weak_delegate) IBOutlet id<SwipeViewDataSource> dataSource;
 @property (nonatomic, weak_delegate) IBOutlet id<SwipeViewDelegate> delegate;
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, readonly) NSInteger numberOfItems;
 @property (nonatomic, readonly) NSInteger numberOfPages;
 @property (nonatomic, readonly) CGSize itemSize;
@@ -79,7 +76,6 @@ typedef NS_ENUM(NSUInteger, SwipeViewAlignment)
 @property (nonatomic, assign) BOOL delaysContentTouches;
 @property (nonatomic, assign) BOOL bounces;
 @property (nonatomic, assign) float decelerationRate;
-@property (nonatomic, assign) CGFloat autoscroll;
 @property (nonatomic, readonly, getter = isDragging) BOOL dragging;
 @property (nonatomic, readonly, getter = isDecelerating) BOOL decelerating;
 @property (nonatomic, readonly, getter = isScrolling) BOOL scrolling;
@@ -92,6 +88,7 @@ typedef NS_ENUM(NSUInteger, SwipeViewAlignment)
 - (void)scrollToOffset:(CGFloat)offset duration:(NSTimeInterval)duration;
 - (void)scrollByNumberOfItems:(NSInteger)itemCount duration:(NSTimeInterval)duration;
 - (void)scrollToItemAtIndex:(NSInteger)index duration:(NSTimeInterval)duration;
+- (void)scrollToItemAtIndex:(NSInteger)index duration:(NSTimeInterval)duration direction:(BOOL)positive;
 - (void)scrollToPage:(NSInteger)page duration:(NSTimeInterval)duration;
 - (UIView *)itemViewAtIndex:(NSInteger)index;
 - (NSInteger)indexOfItemView:(UIView *)view;
@@ -121,9 +118,7 @@ typedef NS_ENUM(NSUInteger, SwipeViewAlignment)
 - (void)swipeViewDidEndScrollingAnimation:(SwipeView *)swipeView;
 - (BOOL)swipeView:(SwipeView *)swipeView shouldSelectItemAtIndex:(NSInteger)index;
 - (void)swipeView:(SwipeView *)swipeView didSelectItemAtIndex:(NSInteger)index;
+- (UIView *)viewForZoomingInSwipeView:(SwipeView *)swipeView;
+
 
 @end
-
-
-#pragma GCC diagnostic pop
-
